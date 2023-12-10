@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Information</title>
+</head>
+<body>
+    <h1>Car Information</h1>
+    <table border="1">
+        <tr>
+            <th>Brand</th>
+            <th>Model</th>
+            <th>Year</th>
+            <th>Fuel Capacity</th>
+            <th>Current Odometer</th>
+            <th>Actions</th>
+        </tr>
+        {% for car in cars %}
+        <tr>
+            <td>{{ car.brand }}</td>
+            <td>{{ car.model }}</td>
+            <td>{{ car.year }}</td>
+            <td>{{ car.fuel_capacity }}</td>
+            <td>{{ car.current_odometer }}</td>
+            <td>
+                <a href="{{ url_for('add_refuel', car_id=car.car_id) }}">Add Refuel</a>
+                <a href="{{ url_for('add_odometer', car_id=car.car_id) }}">Add Odometer</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{{ url_for('create_car') }}"><button>Create New Car</button></a>
+</body>
+</html>

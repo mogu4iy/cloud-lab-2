@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Car</title>
+</head>
+<body>
+    <h1>Create Car</h1>
+    <form method="POST">
+        <label for="brand">Brand:</label>
+        <input type="text" name="brand" required><br>
+
+        <label for="model">Model:</label>
+        <input type="text" name="model" required><br>
+
+        <label for="year">Year:</label>
+        <input type="number" name="year" required><br>
+
+        <label for="fuel_capacity">Fuel Capacity:</label>
+        <input type="number" name="fuel_capacity" step="0.01" required><br>
+
+        <label for="current_odometer">Current Odometer:</label>
+        <input type="number" name="current_odometer" step="0.01" required><br>
+
+        <button type="submit">Create Car</button>
+    </form>
+</body>
+</html>
