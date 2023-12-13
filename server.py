@@ -58,6 +58,22 @@ def delete_car(car_id):
     return jsonify(id = car.id)
 
 
+@app.route('/car/<int:car_id>/reset', methods=['POST'])
+def reset_car(car_id):
+    car = db.get_or_404(Car, {"id": car_id})
+
+    date = datetime.now()
+
+    odometer = Odometer(value=car.current_odometer, date=date, is_reseted=True, car_id=car_id)
+    db.session.add(odometer)
+    db.session.commit()
+
+    car.current_odometer = 0
+    db.session.commit()
+
+    return jsonify(car)
+
+
 @app.route('/refuel', methods=['POST'])
 def create_refuel():
     car_id = int(request.json['car_id'])
