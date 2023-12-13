@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from models.car import Car
 from models.refuel import Refuel
 from models.odometer import Odometer
@@ -13,57 +13,149 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://hu2nomejxeylnvo8:lvev1f
 # Initialize databases
 db.init_app(app)
 
-
-@app.route('/')
-def index():
-    cars = Car.query.all()
-    return render_template('index.html', cars=cars)
-
-@app.route('/create_car', methods=['GET', 'POST'])
+@app.route('/car', methods=['POST'])
 def create_car():
-    if request.method == 'POST':
-        brand = request.form['brand']
-        model = request.form['model']
-        year = int(request.form['year'])
-        fuel_capacity = float(request.form['fuel_capacity'])
-        current_odometer = float(request.form['current_odometer'])
+    brand = request.json['brand']
+    model = request.json['model']
+    year = int(request.json['year'])
+    fuel_capacity = float(request.json['fuel_capacity'])
+    current_odometer = float(request.json['current_odometer'])
 
-        car = Car(brand=brand, model=model, year=year, fuel_capacity=fuel_capacity, current_odometer=current_odometer)
-        db.session.add(car)
-        db.session.commit()
-        
-        return redirect(url_for('index'))
+    car = Car(brand=brand, model=model, year=year, fuel_capacity=fuel_capacity, current_odometer=current_odometer)
+    db.session.add(car)
+    db.session.commit()
 
-    return render_template('create_car.html')
+    return jsonify(car)
 
-@app.route('/add_refuel/<int:car_id>', methods=['GET', 'POST'])
-def add_refuel(car_id):
-    if request.method == 'POST':
-        car = Car.query.get_or_404(car_id)
-        refuel_date = datetime.strptime(request.form['refuel_date'], '%Y-%m-%d')
-        fuel_amount = float(request.form['fuel_amount'])
-        fuel_price = float(request.form['fuel_price'])
-        odometer_reading = float(request.form['odometer_reading'])
 
-        refuel = Refuel(car=car, refuel_date=refuel_date, fuel_amount=fuel_amount, fuel_price=fuel_price, odometer_reading=odometer_reading)
-        db.session.add(refuel)
-        db.session.commit()
+@app.route('/car/<int:car_id>', methods=['GET'])
+def read_car(car_id):
+    car = db.get_or_404(Car, {"id": car_id})
 
-        return redirect(url_for('index'))
+    return jsonify(car)
 
-    return render_template('add_refuel.html', car_id=car_id)
 
-@app.route('/add_odometer/<int:car_id>', methods=['GET', 'POST'])
-def add_odometer(car_id):
-    if request.method == 'POST':
-        car = Car.query.get_or_404(car_id)
-        odometer_date = datetime.strptime(request.form['odometer_date'], '%Y-%m-%d')
-        odometer_reading = float(request.form['odometer_reading'])
+@app.route('/car/<int:car_id>', methods=['PUT'])
+def update_car(car_id):
+    car = db.get_or_404(Car, {"id": car_id})
 
-        odometer = Odometer(car=car, odometer_date=odometer_date, odometer_reading=odometer_reading)
-        db.session.add(odometer)
-        db.session.commit()
+    car.brand = request.json['brand']
+    car.model = request.json['model']
+    car.year = int(request.json['year'])
+    car.fuel_capacity = float(request.json['fuel_capacity'])
+    db.session.commit()
 
-        return redirect(url_for('index'))
+    return jsonify(car)
 
-    return render_template('add_odometer.html', car_id=car_id)
+
+@app.route('/car/<int:car_id>', methods=['DELETE'])
+def delete_car(car_id):
+    car = db.get_or_404(Car, {"id": car_id})
+
+    db.session.delete(car)
+    db.session.commit()
+
+    return jsonify(id = car.id)
+
+
+@app.route('/refuel', methods=['POST'])
+def create_refuel():
+    car_id = int(request.json['car_id'])
+
+    car = db.get_or_404(Car, {"id": car_id})
+
+    amount = float(request.json['amount'])
+    price = float(request.json['price'])
+    date = datetime.strptime(request.json['date'], '%Y-%m-%d %H:%M:%S')
+    odometer_value = float(request.json['odometer_value'])
+
+    odometer = Odometer(value=odometer_value, date=date, car_id=car_id)
+    db.session.add(odometer)
+    db.session.commit()
+
+    refuel = Refuel(car_id=car_id, amount=amount, price=price, date=date, odometer_id=odometer.id)
+    db.session.add(refuel)
+    db.session.commit()
+
+    car.current_odometer = odometer_value
+    db.session.commit()
+
+    return jsonify(refuel)
+
+
+@app.route('/refuel/<int:refuel_id>', methods=['GET'])
+def read_refuel(refuel_id):
+    refuel = db.get_or_404(Refuel, {"id": refuel_id})
+
+    return jsonify(refuel)
+
+
+# @app.route('/refuel/<int:refuel_id>', methods=['PUT'])
+# def update_refuel(refuel_id):
+#     refuel = db.get_or_404(Refuel, {"id": refuel_id})
+#
+#     refuel.amount = float(request.json['amount'])
+#     refuel.price = float(request.json['price'])
+#     db.session.commit()
+#
+#     return jsonify(refuel)
+
+
+# @app.route('/refuel/<int:refuel_id>', methods=['DELETE'])
+# def delete_refuel(refuel_id):
+#     refuel = db.get_or_404(Refuel, {"id": refuel_id})
+#
+#     db.session.delete(refuel)
+#     db.session.commit()
+#
+#     return jsonify(id = refuel.id)
+
+
+@app.route('/odometer', methods=['POST'])
+def create_odometer():
+    car_id = int(request.json['car_id'])
+
+    car = db.get_or_404(Car, {"id": car_id})
+
+    date = datetime.strptime(request.json['date'], '%Y-%m-%d %H:%M:%S')
+    value = float(request.json['value'])
+    is_reseted = bool(request.json['is_reseted'])
+
+    odometer = Odometer(value=value, date=date, is_reseted=is_reseted, car_id=car_id)
+    db.session.add(odometer)
+    db.session.commit()
+
+    if is_reseted:
+        car.current_odometer = 0
+    else:
+        car.current_odometer = value
+    db.session.commit()
+
+    return jsonify(odometer)
+
+
+@app.route('/odometer/<int:odometer_id>', methods=['GET'])
+def read_odometer(odometer_id):
+    odometer = db.get_or_404(Odometer, {"id": odometer_id})
+
+    return jsonify(odometer)
+
+
+# @app.route('/odometer/<int:odometer_id>', methods=['PUT'])
+# def update_odometer(odometer_id):
+#     odometer = db.get_or_404(Odometer, {"id": odometer_id})
+#
+#     odometer.value = float(request.json['value'])
+#     db.session.commit()
+#
+#     return jsonify(odometer)
+
+
+# @app.route('/odometer/<int:odometer_id>', methods=['DELETE'])
+# def delete_odometer(odometer_id):
+#     odometer = db.get_or_404(Odometer, {"id": odometer_id})
+#
+#     db.session.delete(odometer)
+#     db.session.commit()
+#
+#     return jsonify(id = odometer.id)
