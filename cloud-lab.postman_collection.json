@@ -1,0 +1,324 @@
+{
+	"info": {
+		"_postman_id": "2d136dea-09a9-4387-8eb7-c8fab695c76f",
+		"name": "cloud-lab",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13141264"
+	},
+	"item": [
+		{
+			"name": "lab2",
+			"item": [
+				{
+					"name": "car",
+					"item": [
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"brand\": \"BMW\",\r\n    \"model\": \"X1\",\r\n    \"year\": 2010,\r\n    \"fuel_capacity\": 51,\r\n    \"current_odometer\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/car",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"car"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"brand\": \"BMW\",\r\n    \"model\": \"X2\",\r\n    \"year\": 2010,\r\n    \"fuel_capacity\": 51,\r\n    \"current_odometer\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/car/2",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"car",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Read",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/car/2",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"car",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/car/3",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"car",
+										"3"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "refuel",
+					"item": [
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"car_id\": 4,\r\n    \"amount\": 20,\r\n    \"price\": 0.9,\r\n    \"date\": \"2022-12-27 08:26:49\",\r\n    \"odometer_value\": 20\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/refuel",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"refuel"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"amount\": 10,\r\n    \"price\": 1.6\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/refuel/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"refuel",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Read",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/refuel/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"refuel",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/refuel/2",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"refuel",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "odometer",
+					"item": [
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"car_id\": 4,\r\n    \"is_reseted\": false,\r\n    \"date\": \"2022-12-27 08:26:49\",\r\n    \"value\": 10\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/odometer",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"odometer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"value\": 20\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/odometer/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"odometer",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Read",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/odometer/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"odometer",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/odometer/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"odometer",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://127.0.0.1:5000",
+			"type": "string"
+		}
+	]
+}
